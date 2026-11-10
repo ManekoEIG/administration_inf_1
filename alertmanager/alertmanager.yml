@@ -1,0 +1,9 @@
+route:
+  receiver: demo-webhook
+  group_wait: 5s
+
+receivers:
+  - name: demo-webhook
+    webhook_configs:
+      - url: http://service:8000/alert-webhook
+        send_resolved: true

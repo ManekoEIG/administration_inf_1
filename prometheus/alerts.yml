@@ -1,0 +1,24 @@
+groups:
+  - name: demo-service
+    rules:
+      - alert: HighErrorRate
+        expr: sum(rate(http_errors_total[1m])) / sum(rate(http_requests_total[1m])) > 0.05
+        for: 10s
+        keep_firing_for: 2m
+        labels:
+          severity: critical
+      - alert: HighRequestRate
+        expr: sum(rate(http_requests_total[30s])) > 10
+        for: 10s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Колличесвто запросов выше 10"
+      - alert: HighLatencyP95
+        expr: histogram_quantile( 0.95 , sum by (le) ( rate(http_request_duration_seconds_bucket[1m]) ) )   >   1
+        for: 10s
+        labels:
+          severity: warning
+        annotations:
+          summary: "p95 времени ответа выше 1 секунды"
+
